@@ -1,0 +1,10 @@
+E2att 0.0.1
+26 Feb. 2013
+=======
+
+Python script for stimulus presentation and acquisition in the attention-attractiion experimental psychology project. 
+
+Non-free stimulus files excluded via .gitignore. Please contact the project leader for advice on how to acquire suitable stimulus images. 
+
+
+Released under the GPLv3 license. Project led by Horea Christian (address all correspondence to: h.chr@mail.ru)
