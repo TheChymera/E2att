@@ -19,13 +19,9 @@ framerate = 60
 
 #TIMES (in [ms]):
 fixationtime = 2 # s instead of ms
-trialtime = 2 # s instead of ms
-img_dur = 3000
-pause = 2000
-
-#calculate times in [frames] instead of [ms]
-pause = pause / (1000 / framerate)
-img_dur = img_dur / (1000 / framerate)
+att_time = 2 # s instead of ms
+rate_time = 3
+pause = 2
 
 expInfo = {'Identifier':'','Most attracted to':['female faces','male faces']}
 
@@ -102,13 +98,17 @@ for face_loop_val in face_loop:
     image.setImage(img_path + face_loop_val['name'])
     rating.reset()
     t = 0
-    trialClock.reset()  # clock 
-    for frameN in range(int(pause+img_dur)): 
-        if 0<=frameN<pause:#present fixation for a subset of frames
-            fixation.draw()
-        if pause<=frameN<pause+img_dur:#present stim for a different subset
-            image.draw()
-        win.flip()
+    #Fixation
+    fixation.draw(win)
+    win.flip()
+    core.wait(fixationtime,fixationtime)
+    #Picture
+    win.setRecordFrameIntervals(False)
+    image.draw()
+    win.flip()
+    win.setRecordFrameIntervals(True)
+    trialClock.reset() #Put this after the fixation win.flip if you want to count fixation as part of the trial.
+    core.wait(rate_time,rate_time)
     continueRoutine = True
     while continueRoutine:
         rating.draw()
@@ -167,13 +167,14 @@ for attwm_loop_val in attwm_loop:
     win.flip()
     core.wait(fixationtime,fixationtime)
     #Targets
+    win.setRecordFrameIntervals(False)
     image_l.draw(win)
     image_r.draw(win)
     circle.draw(win)
     square.draw(win)
     win.flip()
     trialClock.reset() #Put this after the fixation win.flip if you want to count fixation as part of the trial.
-    core.wait(trialtime,trialtime)
+    core.wait(att_time,att_time)
     keypress = event.getKeys(keyList=None,timeStamped=trialClock)
     keypress = np.array(keypress)
     if keypress == []:
