@@ -26,7 +26,6 @@ pause = 2000
 #calculate times in [frames] instead of [ms]
 pause = pause / (1000 / framerate)
 img_dur = img_dur / (1000 / framerate)
-print pause, img_dur
 
 expInfo = {'Identifier':'','Most attracted to':['female faces','male faces']}
 
@@ -118,7 +117,6 @@ for face_loop_val in face_loop:
         continueRoutine = rating.noResponse
     win.setMouseVisible(False)
     dataWriter.writerow([face_loop_val['name'], str(rating.getRating()), str(rating.getRT())])
-print win.frameIntervals
 dataFile.close()
 win.flip()
 message2.draw()
@@ -131,25 +129,20 @@ readfile = csv.reader(dataFile, delimiter =',')
 for row in readfile:
     pics.append(row)
 dataFile.close()
-print pics
 pics = np.array(pics[1:][:])
 pics_sort = pics[pics[:,1].argsort()] #sorted by attractiveness, argsort gives a row number's list so that the column is ascending
 top_pics = pics_sort[-pic_group_N:,:]
-print top_pics, len(top_pics), pic_repeat
 bottom_pics = pics_sort[:pic_group_N,:]
 top_pics_stack = np.tile(top_pics, (pic_repeat, 1))
 top_pics_stack = top_pics_stack[permutation(len(top_pics_stack))]
-print len(top_pics_stack), permutation(len(top_pics_stack))
 bottom_pics_stack = np.tile(bottom_pics, (pic_repeat, 1))
 bottom_pics_stack = bottom_pics_stack[permutation(len(bottom_pics_stack))]
-print permutation(len(bottom_pics_stack))
 lcue = np.tile([['True'], ['False']], (wm_trial_repeat/2,1))
 cond_1= np.concatenate((top_pics_stack[0:wm_trial_repeat], bottom_pics_stack[0:wm_trial_repeat], lcue), axis=1)
 cond_2= np.concatenate((bottom_pics_stack[wm_trial_repeat:wm_trial_repeat*2], top_pics_stack[wm_trial_repeat:wm_trial_repeat*2], lcue), axis=1)
 cond_3= np.concatenate((bottom_pics_stack[wm_trial_repeat*2:wm_trial_repeat*3], bottom_pics_stack[wm_trial_repeat*3:wm_trial_repeat*4], lcue), axis=1)
 cond_4= np.concatenate((top_pics_stack[wm_trial_repeat*2:wm_trial_repeat*3], top_pics_stack[wm_trial_repeat*3:wm_trial_repeat*4], lcue), axis=1)
 stimuli = np.concatenate((cond_1, cond_2, cond_3, cond_4), axis=0)
-print stimuli
 #instructions wm-att trial
 message3.draw()
 win.flip()
@@ -157,7 +150,6 @@ event.waitKeys()#pause until there's a keypress
 # stimuli = stimuli[:2] # curtail stimuli for test purposes
 # new loops
 tb_pictures = [{'namel': x[0], 'ratel': x[1], 'namer': x[3], 'rater': x[4], 'stiml': x[6]} for x in stimuli]
-print tb_pictures
 attwm_loop = data.TrialHandler(tb_pictures, 1)
 
 for attwm_loop_val in attwm_loop:
@@ -190,4 +182,5 @@ for attwm_loop_val in attwm_loop:
                           keypress[0][0], keypress[0][1]])
 message4.draw()
 win.flip()
-time.sleep(7)
+time.sleep(5)
+win.close()
