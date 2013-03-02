@@ -27,7 +27,7 @@ expInfo = {'Identifier':'','Most attracted to':['female faces','male faces']}
 
 dlg = gui.DlgFromDict(expInfo, title='Experiment1', fixed=['date'])
 if dlg.OK == False: core.quit()  # user pressed cancel
-expInfo['date'] = data.getDateStr(format="%Y-%m-%d_%H-%M")  # add a simple timestamp
+expInfo['date'] = data.getDateStr(format="%m-%d_%H-%M")  # add a simple timestamp
 
 #General variables:
 if expInfo['Most attracted to'] == 'male faces':
@@ -39,8 +39,8 @@ else:
     
 #fileName = 'results/2013-02-04_01-41_mmm_f_p'
 #fileName2 = '2013-02-04_00-53_chr_f_p'
-fileName = 'results/' + expInfo['date'] + '_' + expInfo['Identifier'] + '_' + face_gender + '_' + 'p'
-fileName2 = 'results/' + expInfo['date'] + '_' + expInfo['Identifier'] + '_' + face_gender + '_' +'wm'
+fileName = 'results/' +  expInfo['Identifier'] + '_' + face_gender + '_' + 'p' + expInfo['date']
+fileName2 = 'results/' + expInfo['Identifier'] + '_' + face_gender + '_' +'wm' + expInfo['date']
 dataFile = open(fileName+'.csv', 'a')
 dataFile2 = open(fileName2+'.csv', 'a')
 dataWriter2 = csv.writer(dataFile2, delimiter=',')
