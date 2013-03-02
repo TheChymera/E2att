@@ -4,24 +4,32 @@ __author__ = 'Horea Christian'
 from psychopy import core, visual, gui, data, event
 from math import ceil
 from numpy.random import permutation
-import time
 from os import listdir
+from letobii import TobiiController
+import time
 import csv
 import numpy as np
 
+################################
+### Experiment variables 
+################################
 wm_trial_repeat=6 #even number, to maintain 1:1 left/rigt cue pressentation ratio
 wm_trial_cond=8
 pic_group_N=10 #how many pictures in each group (attractive//unattractive)
-pic_repeat = ceil(wm_trial_repeat * wm_trial_cond / pic_group_N)
-#MONITOR SPECS:
-resolution = [1920, 1080]
-framerate = 60
 
 #TIMES (in [ms]):
 fixationtime = 2 # s instead of ms
 att_time = 2 # s instead of ms
 rate_time = 3
 pause = 2
+
+#MONITOR SPECS:
+resolution = [1920, 1080]
+################################
+### END Experiment variables 
+################################
+
+pic_repeat = ceil(wm_trial_repeat * wm_trial_cond / pic_group_N) # calculate necessary repeats
 
 expInfo = {'Identifier':'','Most attracted to':['female faces','male faces']}
 
@@ -37,10 +45,9 @@ else:
     img_path='pics/female/'
     face_gender = 'f'
     
-#fileName = 'results/2013-02-04_01-41_mmm_f_p'
-#fileName2 = '2013-02-04_00-53_chr_f_p'
 fileName = 'results/' +  expInfo['Identifier'] + '_' + face_gender + '_' + 'p' + expInfo['date']
 fileName2 = 'results/' + expInfo['Identifier'] + '_' + face_gender + '_' +'wm' + expInfo['date']
+eyedata = 'results/testdata.tsv'
 dataFile = open(fileName+'.csv', 'a')
 dataFile2 = open(fileName2+'.csv', 'a')
 dataWriter2 = csv.writer(dataFile2, delimiter=',')
@@ -50,7 +57,7 @@ pictures = listdir(img_path)
 pictures = [{'name': x.decode('ascii')} for x in pictures]
 
 #windows:
-win = visual.Window(resolution,color=[1,1,1],fullscr=True,allowGUI=False,monitor="testMonitor", screen=1, units="deg")
+win = visual.Window(resolution, color=[1,1,1],fullscr=True,allowGUI=False,monitor="testMonitor", screen=1, units="deg")
 win.setRecordFrameIntervals(True)
 
 #experiments:
@@ -86,14 +93,27 @@ rating = visual.RatingScale(win=win, name='rating', displaySizeFactor=1.00, esca
 #and some handy clocks to keep track of time
 globalClock = core.Clock()
 trialClock = core.Clock()
-#inputs
+#Eye tracking (Tobii)
+controller = TobiiController(win)
+controller.setDataFile(eyedata)
+controller.waitForFindEyeTracker()
+controller.activate(controller.eyetrackers.keys()[0])
+while True:
+    ret = controller.doCalibration([(0.1,0.1), (0.9,0.1) , (0.5,0.5), (0.1,0.9), (0.9,0.9)])
+    if ret == 'accept':
+        break
+    elif ret == 'abort':
+        controller.destroy()
+        sys.exit()
+marker = psychopy.visual.Rect(win,width=5,height=5)
+controller.startTracking()
 
 
+#START DISPLAYING
 message1.draw()
 win.flip()#to show our newly drawn 'stimuli'
 event.waitKeys()#pause until there's a keypress
-
-
+#RATING TRIALS
 for face_loop_val in face_loop:
     image.setImage(img_path + face_loop_val['name'])
     rating.reset()
@@ -151,7 +171,7 @@ event.waitKeys()#pause until there's a keypress
 # new loops
 tb_pictures = [{'namel': x[0], 'ratel': x[1], 'namer': x[3], 'rater': x[4], 'stiml': x[6]} for x in stimuli]
 attwm_loop = data.TrialHandler(tb_pictures, 1)
-
+# ATTENTION TRIALS
 for attwm_loop_val in attwm_loop:
     image_l.setImage(img_path + attwm_loop_val['namel'])
     image_r.setImage(img_path + attwm_loop_val['namer'])
