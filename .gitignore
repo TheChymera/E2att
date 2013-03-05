@@ -35,7 +35,7 @@ image*.png
 #eclipse 
 .project
 .pydevproject
-.settings/
+.settings/*
 
 #Folders with non-free data:
 pics/

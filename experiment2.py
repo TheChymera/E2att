@@ -9,6 +9,7 @@ from letobii import TobiiController
 import time
 import csv
 import numpy as np
+import sys
 
 ################################
 ### Experiment variables 
@@ -105,7 +106,7 @@ while True:
     elif ret == 'abort':
         controller.destroy()
         sys.exit()
-marker = psychopy.visual.Rect(win,width=5,height=5)
+marker = visual.Rect(win,width=5,height=5)
 controller.startTracking()
 
 
@@ -193,6 +194,7 @@ for attwm_loop_val in attwm_loop:
     circle.draw(win)
     square.draw(win)
     win.flip()
+    win.setRecordFrameIntervals(True)
     trialClock.reset() #Put this after the fixation win.flip if you want to count fixation as part of the trial.
     core.wait(att_time,att_time)
     keypress = event.getKeys(keyList=None,timeStamped=trialClock)

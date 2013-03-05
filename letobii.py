@@ -106,7 +106,7 @@ class TobiiController:
         self.calin = psychopy.visual.Circle(self.win,radius=2,fillColor=(0.0,0.0,0.0))
         self.calout = psychopy.visual.Circle(self.win,radius=64,lineColor=(0.0,1.0,0.0))
         self.calresult = psychopy.visual.SimpleImageStim(self.win,img)
-        self.calresultmsg = psychopy.visual.TextStim(self.win,pos=(0,-win.size[1]/4))
+        self.calresultmsg = psychopy.visual.TextStim(self.win,pos=(0,-self.win.size[1]/4))
         
         self.initcalibration_completed = False
         print "StartCalibration"
@@ -121,7 +121,7 @@ class TobiiController:
 					waitkey = False				
             self.calout.draw()
             self.calin.draw()
-            win.flip()
+            self.win.flip()
         
         clock = psychopy.core.Clock()
         for self.point_index in range(len(self.points)):
@@ -137,7 +137,7 @@ class TobiiController:
                 psychopy.event.getKeys()
                 self.calout.draw()
                 self.calin.draw()
-                win.flip()
+                self.win.flip()
                 currentTime = clock.getTime()
             self.add_point_completed = False
             self.eyetracker.AddCalibrationPoint(p, lambda error, r: self.on_add_completed(error, r))
@@ -145,7 +145,7 @@ class TobiiController:
                 psychopy.event.getKeys()
                 self.calout.draw()
                 self.calin.draw()
-                win.flip()
+                self.win.flip()
          
         self.computeCalibration_completed = False
         self.computeCalibration_succeeded = False
@@ -154,7 +154,7 @@ class TobiiController:
             pass
         self.eyetracker.StopCalibration(None)
         
-        win.flip()
+        self.win.flip()
         
         self.getcalibration_completed = False
         self.calib = self.eyetracker.GetCalibration(lambda error, calib: self.on_calib_response(error, calib))
