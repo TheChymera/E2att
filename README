@@ -2,7 +2,7 @@ E2att 0.0.1
 26 Feb. 2013
 =======
 
-Python script for stimulus presentation and acquisition in the attention-attractiion experimental psychology project. 
+Python scripts for stimulus presentation, and data acquisition and analysis in the "Attractiveness as a Distractor in Search Tasks" experimental psychology project.
 
 Non-free stimulus files excluded via .gitignore. Please contact the project leader for advice on how to acquire suitable stimulus images. 
 
