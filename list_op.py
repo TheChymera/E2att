@@ -1,10 +1,10 @@
 __author__ = 'Horea Christian' #if you contribute add your name to the end of this list
 import numpy as np
 from import_export import get_data
-soir_max = 9
-ras_max = 5
-tipi_max = 7
-divide = np.array([['ras', 7],['tipi', 2]])
+soir_max = 9 #maximum numerical score in SOI-R items
+ras_max = 5 #maximum numerical score in RAS items
+tipi_max = 7 #maximum numerical score in TIPI items
+divide = np.array([['ras', 7],['tipi', 2]]) #what scores need to be divided by what numbers
 
 
 def lefilter(keep=None):
