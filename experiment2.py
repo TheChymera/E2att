@@ -50,10 +50,11 @@ fileName = 'results/' +  expInfo['Identifier'] + '_' + face_gender + '_' + 'p' +
 fileName2 = 'results/' + expInfo['Identifier'] + '_' + face_gender + '_' +'wm' + expInfo['date']
 eyedata = 'results/testdata.tsv'
 dataFile = open(fileName+'.csv', 'a')
+dataWriter = csv.writer(dataFile, delimiter=',')
+dataWriter.writerow(['nameL','rateL','nameR','rateR', 'isstimleft', 'keypress', 'RT', 'session'])
 dataFile2 = open(fileName2+'.csv', 'a')
 dataWriter2 = csv.writer(dataFile2, delimiter=',')
-dataWriter = csv.writer(dataFile, delimiter=',')
-dataWriter.writerow(['picture','score','RT'])
+dataWriter2.writerow(['picture','score','RT','session'])
 pictures = listdir(img_path)
 pictures = [{'name': x.decode('ascii')} for x in pictures]
 
@@ -115,7 +116,7 @@ message1.draw()
 win.flip()#to show our newly drawn 'stimuli'
 event.waitKeys()#pause until there's a keypress
 #RATING TRIALS
-for face_loop_val in face_loop:
+for ix, face_loop_val in enumerate(face_loop):
     image.setImage(img_path + face_loop_val['name'])
     rating.reset()
     t = 0
@@ -137,7 +138,7 @@ for face_loop_val in face_loop:
         win.flip()
         continueRoutine = rating.noResponse
     win.setMouseVisible(False)
-    dataWriter.writerow([face_loop_val['name'], str(rating.getRating()), str(rating.getRT())])
+    dataWriter.writerow([face_loop_val['name'], str(rating.getRating()), str(rating.getRT()), ix])
 dataFile.close()
 win.flip()
 message2.draw()
@@ -173,7 +174,7 @@ event.waitKeys()#pause until there's a keypress
 tb_pictures = [{'namel': x[0], 'ratel': x[1], 'namer': x[3], 'rater': x[4], 'stiml': x[6]} for x in stimuli]
 attwm_loop = data.TrialHandler(tb_pictures, 1)
 # ATTENTION TRIALS
-for attwm_loop_val in attwm_loop:
+for ix, attwm_loop_val in enumerate(attwm_loop):
     image_l.setImage(img_path + attwm_loop_val['namel'])
     image_r.setImage(img_path + attwm_loop_val['namer'])
     if attwm_loop_val['stiml'] == 'False':
@@ -202,7 +203,7 @@ for attwm_loop_val in attwm_loop:
     if keypress == []:
         continue
     dataWriter2.writerow([attwm_loop_val['namel'], attwm_loop_val['ratel'], attwm_loop_val['namer'], attwm_loop_val['rater'], attwm_loop_val['stiml'], 
-                          keypress[0][0], keypress[0][1]])
+                          keypress[0][0], keypress[0][1], ix])
 message4.draw()
 win.flip()
 time.sleep(5)
