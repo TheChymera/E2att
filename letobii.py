@@ -38,7 +38,10 @@ class TobiiController:
         self.mainloop_thread = tobii.eye_tracking_io.mainloop.MainloopThread()
         self.browser = tobii.eye_tracking_io.browsing.EyetrackerBrowser(self.mainloop_thread, lambda t, n, i: self.on_eyetracker_browser_event(t, n, i))
         self.mainloop_thread.start()
-        
+    
+#    def lereset(self):
+#        self.clock.reset()
+    
     def waitForFindEyeTracker(self):
         while len(self.eyetrackers.keys())==0:
             pass
@@ -103,10 +106,10 @@ class TobiiController:
         img = Image.new('RGB',self.win.size)
         draw = ImageDraw.Draw(img)
         
-        self.calin = psychopy.visual.Circle(self.win,radius=2,fillColor=(0.0,0.0,0.0))
-        self.calout = psychopy.visual.Circle(self.win,radius=64,lineColor=(0.0,1.0,0.0))
+        self.calin = psychopy.visual.Circle(self.win,units="pix",radius=2,fillColor=(0.0,0.0,0.0))
+        self.calout = psychopy.visual.Circle(self.win,units="pix",radius=64,lineColor=(0.0,1.0,0.0))
         self.calresult = psychopy.visual.SimpleImageStim(self.win,img)
-        self.calresultmsg = psychopy.visual.TextStim(self.win,pos=(0,-self.win.size[1]/4))
+        self.calresultmsg = psychopy.visual.TextStim(self.win,units="pix",pos=(0,-self.win.size[1]/4))
         
         self.initcalibration_completed = False
         print "StartCalibration"
@@ -127,8 +130,8 @@ class TobiiController:
         for self.point_index in range(len(self.points)):
             p = Point2D()
             p.x, p.y = self.points[self.point_index]
-            self.calin.setPos(((p.x-0.5)*self.win.size[0],(0.5-p.y)*self.win.size[1]))
-            self.calout.setPos(((p.x-0.5)*self.win.size[0],(0.5-p.y)*self.win.size[1]))
+            self.calin.setPos(((p.x-0.5)*self.win.size[0],(0.5-p.y)*self.win.size[1]), units="pix")
+            self.calout.setPos(((p.x-0.5)*self.win.size[0],(0.5-p.y)*self.win.size[1]), units="pix")
             
             clock.reset()
             currentTime = clock.getTime()
