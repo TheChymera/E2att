@@ -2,13 +2,18 @@
 from __future__ import division  # so that 1/3=0.333 instead of 1/3=0
 __author__ = 'Horea Christian'
 from psychopy import core, visual, gui, data
-from letobii import TobiiController
 from os import listdir
+from experiments import eyetracker, rate_experiment, st_experiment
 #from lebrowser import EyetrackerBrowser
 import time
 import sys
 
 #EXPERIMENT VARIABLES
+#Subexperiments:
+eyetracker_do = False
+rate_experiment_do = False
+st_experiment_do = True
+
 #Times (in [s]):
 fixationtime = 2
 end_pause = 5
@@ -17,8 +22,11 @@ end_pause = 5
 resolution = [1920, 1080]
 #END EXPERIMENT VARIABLES
 
-#Files:
-eyedata = 'results/testdata.tsv'
+#INTERACTING W/ PARTICIPANT
+expInfo = {'Identifier':'','Most attracted to':['female faces','male faces']}
+dlg = gui.DlgFromDict(expInfo, title='Experiment1')
+if dlg.OK == False: core.quit()  # user pressed cancel
+#END INTERACTING W/ PARTICIPANT
 
 #windows:
 win = visual.Window(resolution, color=[1,1,1],fullscr=True,allowGUI=False,monitor="testMonitor", screen=1, units="deg")
@@ -26,19 +34,14 @@ win.setRecordFrameIntervals(False)
 
 #stimuli:
 fixation = visual.Circle(win, radius=0.1, edges=133, lineColor=(0 , 0, 0), fillColor=(0 , 0, 0))
+message2 = visual.TextStim(win, pos=[0,2],color=[0,0,0],text='Please wait...',wrapWidth=20.0)
 fin_message = visual.TextStim(win, pos=[0,2],color=[0,0,0],text='Thank you very much for completing the test.\n\nPlease report to your experimenter.'
                            ,wrapWidth=20.0)
-						   
+ 
 #and some handy clocks to keep track of time
 globalClock = core.Clock()
 trialClock = core.Clock()
 
-#INTERACTING W/ PARTICIPANT
-expInfo = {'Identifier':'','Most attracted to':['female faces','male faces']}
-dlg = gui.DlgFromDict(expInfo, title='Experiment1', fixed=['date'])
-if dlg.OK == False: core.quit()  # user pressed cancel
-expInfo['date'] = data.getDateStr(format="%m-%d_%H-%M")  # add a simple timestamp
-#END INTERACTING W/ PARTICIPANT
 
 if expInfo['Most attracted to'] == 'male faces':
     face_gender = 'm'
@@ -48,31 +51,19 @@ else:
     face_gender = 'f'
 pictures = listdir(img_path)
 pictures = [{'name': x.decode('ascii')} for x in pictures]
-#Files:
-eyedata = 'results/' +  expInfo['Identifier'] + '_' + face_gender + '_' + 'et' + expInfo['date'] + '.tsv'
-
-#Eye tracking (Tobii)
-controller = TobiiController(win)
-controller.setDataFile(eyedata)
-controller.waitForFindEyeTracker()
-controller.activate(controller.eyetrackers.keys()[0])
-#INTERACTING W/ PARTICIPANT
-while True:
-    ret = controller.doCalibration([(0.1,0.1), (0.9,0.1) , (0.5,0.5), (0.1,0.9), (0.9,0.9)])
-    if ret == 'accept':
-        break
-    elif ret == 'abort':
-        controller.destroy()
-        sys.exit()
-marker = visual.Rect(win,width=5,height=5)
-#END INTERACTING W/ PARTICIPANT
 
 #EXPERIMENT FILES
 
-#execfile('experiment1.py')
-#message2.draw()
-#win.flip()
-execfile('experiment2.py')
+if eyetracker_do:
+    controller = eyetracker(win, expInfo, face_gender)
+else: controller = None
+if rate_experiment_do:
+    fileName = rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fixationtime, trialClock, controller)
+else: fileName = None
+message2.draw()
+win.flip()
+if st_experiment_do:
+    st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock, fileName, controller)
 
 fin_message.draw()
 win.flip()
