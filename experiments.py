@@ -161,12 +161,13 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
         core.wait(att_time,att_time)
         keypress = event.getKeys(keyList=None,timeStamped=trialClock)
         if keypress == []:
-            print 'aaa'
-            keypress = np.array(['none',2])
+            keypress = np.array([['none',2]])
         elif keypress != []:
-            print 'bbb'
             keypress = np.array(keypress)
-        print keypress, type(keypress)
+        keypress = keypress[np.in1d(keypress[:, 0], ['left', 'right', 'none'])]#remove any other keys except left, right, none
+        if len(keypress) == 0:
+		    keypress = np.array(['none',2])
+        print keypress
         win.setRecordFrameIntervals(False)
         if controller:
             controller.stopTracking()
@@ -178,7 +179,7 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
 def eyetracker(win, expInfo, face_gender):
     import sys
     from letobii import TobiiController
-    eyedata = 'results/' +  expInfo['Identifier'] + '_' + face_gender + '_' + 'et' + expInfo['date'] + '.tsv'
+    eyedata = 'results/' +  expInfo['Identifier'] + '_' + face_gender + '_' + 'et' + '.tsv'
     #Eye tracking (Tobii)
     controller = TobiiController(win)
     controller.setDataFile(eyedata)
