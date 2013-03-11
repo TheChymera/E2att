@@ -4,14 +4,13 @@ __author__ = 'Horea Christian'
 from psychopy import core, visual, gui, data
 from os import listdir
 from experiments import eyetracker, rate_experiment, st_experiment
-#from lebrowser import EyetrackerBrowser
 import time
 import sys
 
 #EXPERIMENT VARIABLES
 #Subexperiments:
-eyetracker_do = False
-rate_experiment_do = False
+eyetracker_do = True
+rate_experiment_do = True
 st_experiment_do = True
 
 #Times (in [s]):

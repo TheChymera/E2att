@@ -179,6 +179,7 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
 def eyetracker(win, expInfo, face_gender):
     import sys
     from letobii import TobiiController
+    from lebrowser import EyetrackerBrowser
     eyedata = 'results/' +  expInfo['Identifier'] + '_' + face_gender + '_' + 'et' + '.tsv'
     #Eye tracking (Tobii)
     controller = TobiiController(win)
