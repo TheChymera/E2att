@@ -9,6 +9,7 @@ from tobii.eye_tracking_io.basic import EyetrackerException
 
 import os
 import datetime
+import numpy as np
 
 import tobii.eye_tracking_io.mainloop
 import tobii.eye_tracking_io.browsing
@@ -39,8 +40,6 @@ class TobiiController:
         self.browser = tobii.eye_tracking_io.browsing.EyetrackerBrowser(self.mainloop_thread, lambda t, n, i: self.on_eyetracker_browser_event(t, n, i))
         self.mainloop_thread.start()
     
-#    def lereset(self):
-#        self.clock.reset()
     
     def waitForFindEyeTracker(self):
         while len(self.eyetrackers.keys())==0:
@@ -71,6 +70,8 @@ class TobiiController:
     # activation methods
     ############################################################################
     def activate(self,eyetracker):
+        if eyetracker != 'TX300-010101146855': #Set the identifier of your wanted tracker here (if you have more than one on your network) - if irrelevant remove this and next line
+            raise Exception("Connected to wrong Eyetracker!")
         eyetracker_info = self.eyetrackers[eyetracker]
         print "Connecting to:", eyetracker_info
         tobii.eye_tracking_io.eyetracker.Eyetracker.create_async(self.mainloop_thread,
@@ -109,7 +110,7 @@ class TobiiController:
         self.calin = psychopy.visual.Circle(self.win,units="pix",radius=2,fillColor=(0.0,0.0,0.0))
         self.calout = psychopy.visual.Circle(self.win,units="pix",radius=64,lineColor=(0.0,1.0,0.0))
         self.calresult = psychopy.visual.SimpleImageStim(self.win,img)
-        self.calresultmsg = psychopy.visual.TextStim(self.win,units="pix",pos=(0,-self.win.size[1]/4))
+        self.calresultmsg = psychopy.visual.TextStim(self.win,units="pix",pos=(0,-self.win.size[1]/4), color=[0,0,0])
         
         self.initcalibration_completed = False
         print "StartCalibration"
@@ -164,7 +165,7 @@ class TobiiController:
         while not self.getcalibration_completed:
             pass
         
-        draw.rectangle(((0,0),tuple(self.win.size)),fill=(128,128,128))
+        draw.rectangle(((0,0),tuple(self.win.size)),fill=(254,254,254))
         if not self.computeCalibration_succeeded:
             #computeCalibration failed.
             self.calresultmsg.setText('Not enough data was collected (Retry:r/Abort:ESC)')

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import division  # so that 1/3=0.333 instead of 1/3=0
 __author__ = 'Horea Christian'
+from lebrowser import EyetrackerBrowser
 from psychopy import core, visual, gui, data
 from os import listdir
 from experiments import eyetracker, rate_experiment, st_experiment
@@ -10,8 +11,8 @@ import sys
 #EXPERIMENT VARIABLES
 #Subexperiments:
 eyetracker_do = True
-rate_experiment_do = True
-st_experiment_do = True
+rate_experiment_do = False
+st_experiment_do = False
 
 #Times (in [s]):
 fixationtime = 2
