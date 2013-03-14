@@ -42,7 +42,6 @@ def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fix
         #Picture
         image.draw()
         win.flip()
-        win.setRecordFrameIntervals(True)
         if controller:
             controller.startTracking()
         trialClock.reset() #Put this after the fixation win.flip if you want to count fixation as part of the trial.
@@ -56,7 +55,6 @@ def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fix
             win.flip()
             continueRoutine = rating.noResponse
         win.setMouseVisible(False)
-        win.setRecordFrameIntervals(False)
         dataWriter.writerow([face_loop_val['name'], str(rating.getRating()), str(rating.getRT()), ix])
     dataFile.close()
     #END INTERACTING W/ PARTICIPANT
@@ -70,9 +68,9 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     
     #EXPERIMENT VARIABLES
     #Session repeats et al.
-    wm_trial_repeat=6 #even number, to maintain 1:1 left/rigt cue pressentation ratio
-    wm_trial_cond=8
-    pic_group_N=5 #how many pictures in each group (attractive//unattractive)
+    wm_trial_repeat=20 #even number, to maintain 1:1 left/rigt cue pressentation ratio
+    wm_trial_cond=4 # number of conditions - see end of stimulus index cond_*
+    pic_group_N=20 #how many pictures in each group (attractive//unattractive)
     
     #Times (in [s]):
     att_time = 2
@@ -106,10 +104,10 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     bottom_pics_stack = np.tile(bottom_pics, (pic_repeat, 1))
     bottom_pics_stack = bottom_pics_stack[permutation(len(bottom_pics_stack))]
     lcue = np.tile([['True'], ['False']], (wm_trial_repeat/2,1))
-    cond_1= np.concatenate((top_pics_stack[0:wm_trial_repeat], bottom_pics_stack[0:wm_trial_repeat], lcue), axis=1)
-    cond_2= np.concatenate((bottom_pics_stack[wm_trial_repeat:wm_trial_repeat*2], top_pics_stack[wm_trial_repeat:wm_trial_repeat*2], lcue), axis=1)
-    cond_3= np.concatenate((bottom_pics_stack[wm_trial_repeat*2:wm_trial_repeat*3], bottom_pics_stack[wm_trial_repeat*3:wm_trial_repeat*4], lcue), axis=1)
-    cond_4= np.concatenate((top_pics_stack[wm_trial_repeat*2:wm_trial_repeat*3], top_pics_stack[wm_trial_repeat*3:wm_trial_repeat*4], lcue), axis=1)
+    cond_1= np.concatenate((top_pics_stack[0:wm_trial_repeat], bottom_pics_stack[0:wm_trial_repeat], lcue), axis=1) # attractive vs unattractive
+    cond_2= np.concatenate((bottom_pics_stack[wm_trial_repeat:wm_trial_repeat*2], top_pics_stack[wm_trial_repeat:wm_trial_repeat*2], lcue), axis=1) # unattractive vs attractive
+    cond_3= np.concatenate((bottom_pics_stack[wm_trial_repeat*2:wm_trial_repeat*3], bottom_pics_stack[wm_trial_repeat*3:wm_trial_repeat*4], lcue), axis=1) #unatt vs unatt
+    cond_4= np.concatenate((top_pics_stack[wm_trial_repeat*2:wm_trial_repeat*3], top_pics_stack[wm_trial_repeat*3:wm_trial_repeat*4], lcue), axis=1) #att vs att
     stimuli = np.concatenate((cond_1, cond_2, cond_3, cond_4), axis=0)
     #END CREATE STIMULUS INDEX
     
@@ -154,7 +152,6 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
         circle.draw(win)
         square.draw(win)
         win.flip()
-        win.setRecordFrameIntervals(True)
         if controller:
             controller.startTracking()
         trialClock.reset() #Put this after the fixation win.flip if you want to count fixation as part of the trial.
@@ -168,7 +165,6 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
         if len(keypress) == 0:
 		    keypress = np.array(['none',2])
         print keypress
-        win.setRecordFrameIntervals(False)
         if controller:
             controller.stopTracking()
         dataWriter2.writerow([attwm_loop_val['namel'],attwm_loop_val['ratel'],attwm_loop_val['RTl'],

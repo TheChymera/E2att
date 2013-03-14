@@ -108,7 +108,7 @@ class TobiiController:
         draw = ImageDraw.Draw(img)
         
         self.calin = psychopy.visual.Circle(self.win,units="pix",radius=2,fillColor=(0.0,0.0,0.0))
-        self.calout = psychopy.visual.Circle(self.win,units="pix",radius=64,lineColor=(0.0,1.0,0.0))
+        self.calout = psychopy.visual.Circle(self.win,units="pix",lineWidth=2,radius=64,lineColor=(1.0,0.2,0.0))
         self.calresult = psychopy.visual.SimpleImageStim(self.win,img)
         self.calresultmsg = psychopy.visual.TextStim(self.win,units="pix",pos=(0,-self.win.size[1]/4), color=[0,0,0])
         

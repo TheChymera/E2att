@@ -11,8 +11,8 @@ import sys
 #EXPERIMENT VARIABLES
 #Subexperiments:
 eyetracker_do = True
-rate_experiment_do = False
-st_experiment_do = False
+rate_experiment_do = True
+st_experiment_do = True
 
 #Times (in [s]):
 fixationtime = 2
