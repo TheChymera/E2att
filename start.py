@@ -17,7 +17,7 @@ fixationtime = 2
 end_pause = 5
 
 #Monitor specs:
-mymon = monitors.Monitor('testMonitor', width=51, distance=70)
+mymon = monitors.Monitor('testMonitor', width=51, distance=62)
 resolution = [1920, 1080]
 #END EXPERIMENT VARIABLES
 
