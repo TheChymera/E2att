@@ -32,7 +32,7 @@ win = visual.Window(resolution, color=[1,1,1],fullscr=True,allowGUI=False,monito
 win.setRecordFrameIntervals(False)
 
 #stimuli:
-fixation = visual.Circle(win, radius=0.1, edges=133, lineColor=(0 , 0, 0), fillColor=(0 , 0, 0))
+fixation = visual.Circle(win, radius=0.15, edges=133, lineColor=(0 , 0, 0), fillColor=(0 , 0, 0))
 message2 = visual.TextStim(win, pos=[0,2],color=[0,0,0],text='Please wait...',wrapWidth=20.0)
 fin_message = visual.TextStim(win, pos=[0,2],color=[0,0,0],text='Thank you very much for completing the test.\n\nPlease report to your experimenter.'
                            ,wrapWidth=20.0)
