@@ -21,7 +21,7 @@ def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fix
     #stimuli:
     message1 = visual.TextStim(win, pos=[0,2],color=[0,0,0],text='Rate the following faces according to how attracted you feel towards them.\
         \n\nIn between presentations concentrate on the fixation dot (in the middle of the screen).\n\nPress any key to continue',wrapWidth=20.0)
-    image = visual.ImageStim(win, name='image',image='sin', mask=None,ori=0, pos=[0, 0], size=[9.9,13.2],color=[1,1,1], colorSpace=u'rgb',
+    image = visual.ImageStim(win, name='image',image='sin', mask=None,ori=0, pos=[0, 0], size=[10.2,13.6],color=[1,1,1], colorSpace=u'rgb',
         opacity=1,texRes=128, interpolate=True, depth=0.0)
     rating = visual.RatingScale(win=win, name='rating', displaySizeFactor=1.00, escapeKeys=['escape'],textSizeFactor=0.8, lineColor='DarkGrey',
         pos=[0.0, -0.1], low=0, high=1, showScale=False, lowAnchorText='not at all attracted', highAnchorText='very attracted',stretchHoriz=1.2,
@@ -96,6 +96,7 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
         pics.append(row)
     dataFile.close()
     pics = np.array(pics[1:][:])
+#    pics = pics[pics[:,0].argsort()]
     pics_sort = pics[pics[:,1].argsort()] #sorted by attractiveness, argsort gives a row number's list so that the column is ascending
     top_pics = pics_sort[-pic_group_N:,:]
     bottom_pics = pics_sort[:pic_group_N,:]
@@ -163,7 +164,7 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
             keypress = np.array(keypress)
         keypress = keypress[np.in1d(keypress[:, 0], ['left', 'right', 'none'])]#remove any other keys except left, right, none
         if len(keypress) == 0:
-		    keypress = np.array(['none',2])
+            keypress = np.array(['none',2])
         print keypress
         if controller:
             controller.stopTracking()

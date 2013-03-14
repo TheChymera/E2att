@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 from __future__ import division  # so that 1/3=0.333 instead of 1/3=0
 __author__ = 'Horea Christian'
-from lebrowser import EyetrackerBrowser
-from psychopy import core, visual, gui, data
+from psychopy import core, visual, gui, monitors
 from os import listdir
 from experiments import eyetracker, rate_experiment, st_experiment
 import time
-import sys
 
 #EXPERIMENT VARIABLES
 #Subexperiments:
-eyetracker_do = True
-rate_experiment_do = True
+eyetracker_do = False
+rate_experiment_do = False
 st_experiment_do = True
 
 #Times (in [s]):
@@ -19,6 +17,7 @@ fixationtime = 2
 end_pause = 5
 
 #Monitor specs:
+mymon = monitors.Monitor('testMonitor', width=51, distance=70)
 resolution = [1920, 1080]
 #END EXPERIMENT VARIABLES
 
@@ -29,7 +28,7 @@ if dlg.OK == False: core.quit()  # user pressed cancel
 #END INTERACTING W/ PARTICIPANT
 
 #windows:
-win = visual.Window(resolution, color=[1,1,1],fullscr=True,allowGUI=False,monitor="testMonitor", screen=1, units="deg")
+win = visual.Window(resolution, color=[1,1,1],fullscr=True,allowGUI=False,monitor=mymon, screen=1, units="deg")
 win.setRecordFrameIntervals(False)
 
 #stimuli:
