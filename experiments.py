@@ -3,6 +3,7 @@ from psychopy import visual, data, event, core
 import csv
 
 def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fixationtime, trialClock, controller=None):
+    from random import choice
     
     #EXPERIMENT VARIABLES
     #Times (in [s]):
@@ -15,7 +16,7 @@ def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fix
     dataWriter.writerow(['picture','score','RT','session'])
     
     #loops:
-    face_loop = data.TrialHandler(pictures, 1)
+    face_loop = data.TrialHandler(pictures, 3)
     face_loop_val = face_loop.trialList[0]  # so we can initialise stimuli with some values
     
     #stimuli:
@@ -31,6 +32,29 @@ def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fix
     message1.draw()
     win.flip()#to show our newly drawn 'stimuli'
     event.waitKeys()#pause until there's a keypress
+
+    image.setImage(img_path + choice(face_loop.trialList)['name'])
+    #Fixation
+    fixation.draw(win)
+    win.flip()
+    core.wait(fixationtime,fixationtime)
+    #Picture
+    image.draw()
+    win.flip()
+    if controller:
+        controller.startTracking()
+    trialClock.reset() #Put this after the fixation win.flip if you want to count fixation as part of the trial.
+    core.wait(rate_time,rate_time)
+    continueRoutine = True
+    if controller:
+        controller.stopTracking()
+    while continueRoutine:
+        rating.draw()
+        win.setMouseVisible(True)
+        win.flip()
+        continueRoutine = rating.noResponse
+    win.setMouseVisible(False)
+    
     #RATING TRIALS
     for ix, face_loop_val in enumerate(face_loop):
         image.setImage(img_path + face_loop_val['name'])
@@ -68,8 +92,8 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     
     #EXPERIMENT VARIABLES
     #Session repeats et al.
-    wm_trial_repeat=20 #even number, to maintain 1:1 left/rigt cue pressentation ratio
-    wm_trial_cond=4 # number of conditions - see end of stimulus index cond_*
+    wm_trial_repeat=40 #even number, to maintain 1:1 left/rigt cue pressentation ratio
+    wm_trial_cond=4 # number of conditions - see how many cond_* variables you have below
     pic_group_N=20 #how many pictures in each group (attractive//unattractive)
     
     #Times (in [s]):
@@ -96,7 +120,8 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
         pics.append(row)
     dataFile.close()
     pics = np.array(pics[1:][:])
-#    pics = pics[pics[:,0].argsort()]
+    pics = pics[pics[:,0].argsort()]
+    print pics
     pics_sort = pics[pics[:,1].argsort()] #sorted by attractiveness, argsort gives a row number's list so that the column is ascending
     top_pics = pics_sort[-pic_group_N:,:]
     bottom_pics = pics_sort[:pic_group_N,:]
@@ -110,17 +135,18 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     cond_3= np.concatenate((bottom_pics_stack[wm_trial_repeat*2:wm_trial_repeat*3], bottom_pics_stack[wm_trial_repeat*3:wm_trial_repeat*4], lcue), axis=1) #unatt vs unatt
     cond_4= np.concatenate((top_pics_stack[wm_trial_repeat*2:wm_trial_repeat*3], top_pics_stack[wm_trial_repeat*3:wm_trial_repeat*4], lcue), axis=1) #att vs att
     stimuli = np.concatenate((cond_1, cond_2, cond_3, cond_4), axis=0)
+    print stimuli
     #END CREATE STIMULUS INDEX
     
     #stimuli:
-    circle = visual.Circle(win, radius=0.2, edges=133, lineColor=(0 , 0, 0), fillColor=(0 , 0, 0))# radii chosen so that the area of the square and circle are identical
-    square = visual.Circle(win, radius=0.25, edges=4, lineColor=(0 , 0, 0), fillColor=(0 , 0, 0)) #idem
+    circle = visual.Circle(win, radius=0.32, edges=100, lineColor=(0 , 0, 0), fillColor=(0 , 0, 0), interpolate=True)# radii chosen so that the area of the square and circle are identical
+    square = visual.Circle(win, radius=0.4, edges=4, lineColor=(0 , 0, 0), fillColor=(0 , 0, 0)) #idem
     message3 = visual.TextStim(win, pos=[0,2],color=[0,0,0],text='Select in each screen the position (left/right, as relative to yourself) where\
         the circle is located. \n\nIndicate your choice by pressing the left or right arrow keys on the keyboard as rapidly as possible.\
         \n\nPress any key to continue',wrapWidth=20.0)
-    image_l = visual.ImageStim(win, name='image',image='sin', mask=None,ori=0, pos=[10,0], size=[15,20],color=[1,1,1], colorSpace=u'rgb',
+    image_l = visual.ImageStim(win, name='image',image='sin', mask=None,ori=0, pos=[9,0], size=[15,20],color=[1,1,1], colorSpace=u'rgb',
         opacity=1,texRes=128, interpolate=True, depth=0.0)
-    image_r = visual.ImageStim(win, name='image',image='sin', mask=None,ori=0, pos=[-10,0], size=[15,20],color=[1,1,1], colorSpace=u'rgb',
+    image_r = visual.ImageStim(win, name='image',image='sin', mask=None,ori=0, pos=[-9,0], size=[15,20],color=[1,1,1], colorSpace=u'rgb',
         opacity=1,texRes=128, interpolate=True, depth=0.0)
     core.wait(process_paddingtime,process_paddingtime)
     
@@ -138,11 +164,11 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
         image_l.setImage(img_path + attwm_loop_val['namel'])
         image_r.setImage(img_path + attwm_loop_val['namer'])
         if attwm_loop_val['stiml'] == 'False':
-            circle.setPos((15,0))
-            square.setPos((-15,0))
+            circle.setPos((16,0))
+            square.setPos((-16,0))
         else:
-            circle.setPos((-15,0))
-            square.setPos((15,0))
+            circle.setPos((-16,0))
+            square.setPos((16,0))
         #Fixation
         fixation.draw(win)
         win.flip()

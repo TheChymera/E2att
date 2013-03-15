@@ -17,7 +17,7 @@ fixationtime = 2
 end_pause = 5
 
 #Monitor specs:
-mymon = monitors.Monitor('testMonitor', width=51, distance=62)
+mymon = monitors.Monitor('testMonitor', width=51, distance=61)
 resolution = [1920, 1080]
 #END EXPERIMENT VARIABLES
 
@@ -32,7 +32,7 @@ win = visual.Window(resolution, color=[1,1,1],fullscr=True,allowGUI=False,monito
 win.setRecordFrameIntervals(False)
 
 #stimuli:
-fixation = visual.Circle(win, radius=0.15, edges=133, lineColor=(0 , 0, 0), fillColor=(0 , 0, 0))
+fixation = visual.Circle(win, radius=0.15, edges=64, lineColor=(0 , 0, 0), fillColor=(0 , 0, 0), interpolate=True)
 message2 = visual.TextStim(win, pos=[0,2],color=[0,0,0],text='Please wait...',wrapWidth=20.0)
 fin_message = visual.TextStim(win, pos=[0,2],color=[0,0,0],text='Thank you very much for completing the test.\n\nPlease report to your experimenter.'
                            ,wrapWidth=20.0)
