@@ -7,7 +7,7 @@ def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fix
     
     #EXPERIMENT VARIABLES
     #Times (in [s]):
-    rate_time = 3
+    rate_time = 2
     #END EXPERIMENT VARIABLES
         
     fileName = 'results/' +  expInfo['Identifier'] + '_' + face_gender + '_' + 'p'
@@ -87,12 +87,13 @@ def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fix
 def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock ,fileName=None , controller=None):
     from math import ceil
     from numpy.random import permutation
+    from lefunctions import means_from_id
     import numpy as np
     
     
     #EXPERIMENT VARIABLES
     #Session repeats et al.
-    wm_trial_repeat=40 #even number, to maintain 1:1 left/rigt cue pressentation ratio
+    wm_trial_repeat=30 #even number, to maintain 1:1 left/rigt cue pressentation ratio
     wm_trial_cond=4 # number of conditions - see how many cond_* variables you have below
     pic_group_N=20 #how many pictures in each group (attractive//unattractive)
     
@@ -101,7 +102,7 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     process_paddingtime = 3
     
     #Preset input
-    preset_attfile = '1222427_f_p'
+    preset_attfile = 'chr_f_p'
     #END EXPERIMENT VARIABLES
     
     fileName2 = 'results/' + expInfo['Identifier'] + '_' + face_gender + '_' +'wm'
@@ -120,7 +121,7 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
         pics.append(row)
     dataFile.close()
     pics = np.array(pics[1:][:])
-    pics = pics[pics[:,0].argsort()]
+    pics = means_from_id(pics)
     print pics
     pics_sort = pics[pics[:,1].argsort()] #sorted by attractiveness, argsort gives a row number's list so that the column is ascending
     top_pics = pics_sort[-pic_group_N:,:]
@@ -135,7 +136,6 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     cond_3= np.concatenate((bottom_pics_stack[wm_trial_repeat*2:wm_trial_repeat*3], bottom_pics_stack[wm_trial_repeat*3:wm_trial_repeat*4], lcue), axis=1) #unatt vs unatt
     cond_4= np.concatenate((top_pics_stack[wm_trial_repeat*2:wm_trial_repeat*3], top_pics_stack[wm_trial_repeat*3:wm_trial_repeat*4], lcue), axis=1) #att vs att
     stimuli = np.concatenate((cond_1, cond_2, cond_3, cond_4), axis=0)
-    print stimuli
     #END CREATE STIMULUS INDEX
     
     #stimuli:

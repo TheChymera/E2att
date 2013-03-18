@@ -120,6 +120,7 @@ class TobiiController:
 			
         waitkey = True
         while waitkey:
+            self.calresultmsg.setText('Press the space bar to start calibration.')
             for key in psychopy.event.getKeys():
 				if key=='space':
 					waitkey = False				
