@@ -120,14 +120,15 @@ class TobiiController:
 			
         waitkey = True
         while waitkey:
-            self.calresultmsg.setText('Press the space bar to start calibration.')
             for key in psychopy.event.getKeys():
 				if key=='space':
 					waitkey = False				
             self.calout.draw()
             self.calin.draw()
+            self.calresultmsg.setText('Press the space bar to start calibration.')
+            self.calresultmsg.draw()
             self.win.flip()
-        
+        		
         clock = psychopy.core.Clock()
         for self.point_index in range(len(self.points)):
             p = Point2D()
