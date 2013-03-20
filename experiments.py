@@ -98,17 +98,17 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     pic_group_N=20 #how many pictures in each group (attractive//unattractive)
     
     #Times (in [s]):
-    att_time = 2
+    att_time = 1.5
     process_paddingtime = 3
     
     #Preset input
-    preset_attfile = 'chr_f_p'
+    preset_attfile = '8892162_m_p'
     #END EXPERIMENT VARIABLES
     
     fileName2 = 'results/' + expInfo['Identifier'] + '_' + face_gender + '_' +'wm'
     dataFile2 = open(fileName2+'.csv', 'a')
     dataWriter2 = csv.writer(dataFile2, delimiter=',')
-    dataWriter2.writerow(['nameL','rateL','nameR','rateR', 'isstimleft', 'keypress', 'RT', 'session'])
+    dataWriter2.writerow(['nameL','rateL','RTL','orderL','nameR','rateR','RTR','orderR','isstimleft','keypress','RT','session'])
     
     #CREATE STIMULUS INDEX
     pic_repeat = ceil(wm_trial_repeat * wm_trial_cond / pic_group_N) # calculate necessary repeats
@@ -121,6 +121,7 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
         pics.append(row)
     dataFile.close()
     pics = np.array(pics[1:][:])
+    print pics
     pics = means_from_id(pics)
     print pics
     pics_sort = pics[pics[:,1].argsort()] #sorted by attractiveness, argsort gives a row number's list so that the column is ascending
