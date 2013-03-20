@@ -1,5 +1,6 @@
 __author__ = 'Horea Christian'
 from psychopy import visual, data, event, core
+from lefunctions import save_csv
 import csv
 
 def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fixationtime, trialClock, controller=None):
@@ -10,10 +11,8 @@ def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fix
     rate_time = 2
     #END EXPERIMENT VARIABLES
         
-    fileName = 'results/' +  expInfo['Identifier'] + '_' + face_gender + '_' + 'p'
-    dataFile = open(fileName+'.csv', 'a')
-    dataWriter = csv.writer(dataFile, delimiter=',')
-    dataWriter.writerow(['picture','score','RT','session'])
+    ratingfilename = 'results/' +  expInfo['Identifier'] + '_' + face_gender + '_' + 'p' + '.csv' 
+    ratingwriter, ratingfile = save_csv(ratingfilename, ['picture','score','RT','session'])
     
     #loops:
     face_loop = data.TrialHandler(pictures, 3)
@@ -79,12 +78,12 @@ def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fix
             win.flip()
             continueRoutine = rating.noResponse
         win.setMouseVisible(False)
-        dataWriter.writerow([face_loop_val['name'], str(rating.getRating()), str(rating.getRT()), ix])
-    dataFile.close()
+        ratingwriter.writerow([face_loop_val['name'], str(rating.getRating()), str(rating.getRT()), ix])
+    ratingfile.close()
     #END INTERACTING W/ PARTICIPANT
-    return fileName
+    return ratingfilename
 
-def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock ,fileName=None , controller=None):
+def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock, ratingfilename=None , controller=None):
     from math import ceil
     from numpy.random import permutation
     from lefunctions import means_from_id
@@ -102,28 +101,24 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     process_paddingtime = 3
     
     #Preset input
-    preset_attfile = '8892162_m_p'
+    preset_attfile = 'chr_f_p'
     #END EXPERIMENT VARIABLES
     
-    fileName2 = 'results/' + expInfo['Identifier'] + '_' + face_gender + '_' +'wm'
-    dataFile2 = open(fileName2+'.csv', 'a')
-    dataWriter2 = csv.writer(dataFile2, delimiter=',')
-    dataWriter2.writerow(['nameL','rateL','RTL','orderL','nameR','rateR','RTR','orderR','isstimleft','keypress','RT','session'])
+    wmfilename = 'results/' + expInfo['Identifier'] + '_' + face_gender + '_' +'wm' + '.csv'
+    wmwriter,wmfile = save_csv(wmfilename, ['nameL','rateL','RTL','orderL','nameR','rateR','RTR','orderR','isstimleft','keypress','RT','session'])
     
     #CREATE STIMULUS INDEX
     pic_repeat = ceil(wm_trial_repeat * wm_trial_cond / pic_group_N) # calculate necessary repeats
     pics=[]
-    if not fileName:
-        fileName = 'results/' + preset_attfile
-    dataFile = open(fileName+'.csv', 'r')
-    readfile = csv.reader(dataFile, delimiter =',')
-    for row in readfile:
+    if not ratingfilename:
+        ratingfilename = 'results/' + preset_attfile
+    ratingfile = open(ratingfilename+'.csv', 'r')
+    readrating = csv.reader(ratingfile, delimiter =',')
+    for row in readrating:
         pics.append(row)
-    dataFile.close()
+    ratingfile.close()
     pics = np.array(pics[1:][:])
-    print pics
     pics = means_from_id(pics)
-    print pics
     pics_sort = pics[pics[:,1].argsort()] #sorted by attractiveness, argsort gives a row number's list so that the column is ascending
     top_pics = pics_sort[-pic_group_N:,:]
     bottom_pics = pics_sort[:pic_group_N,:]
@@ -194,11 +189,12 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
             keypress = np.array(['none',2])
         if controller:
             controller.stopTracking()
-        dataWriter2.writerow([attwm_loop_val['namel'],attwm_loop_val['ratel'],attwm_loop_val['RTl'],
+        wmwriter.writerow([attwm_loop_val['namel'],attwm_loop_val['ratel'],attwm_loop_val['RTl'],
         attwm_loop_val['orderl'],attwm_loop_val['namer'],attwm_loop_val['rater'],attwm_loop_val['RTr'],
         attwm_loop_val['orderr'],attwm_loop_val['stiml'],keypress[0][0], keypress[0][1], ix])
+    wmfile.close()
     #END INTERACTING W/ PARTICIPANT
-    
+        
 def eyetracker(win, expInfo, face_gender):
     import sys
     from letobii import TobiiController

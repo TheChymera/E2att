@@ -9,7 +9,7 @@ import time
 #EXPERIMENT VARIABLES
 #Subexperiments:
 eyetracker_do = False
-rate_experiment_do = False
+rate_experiment_do = True
 st_experiment_do = True
 
 #Times (in [s]):
@@ -57,12 +57,12 @@ if eyetracker_do:
     controller = eyetracker(win, expInfo, face_gender)
 else: controller = None
 if rate_experiment_do:
-    fileName = rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fixationtime, trialClock, controller)
-else: fileName = None
+    ratingfilename = rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fixationtime, trialClock, controller)
+else: ratingfilename = None
 message2.draw()
 win.flip()
 if st_experiment_do:
-    st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock, fileName, controller)
+    st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock, ratingfilename, controller)
 
 fin_message.draw()
 win.flip()
