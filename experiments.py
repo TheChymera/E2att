@@ -112,7 +112,7 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     pics=[]
     if not ratingfilename:
         ratingfilename = 'results/' + preset_attfile
-    ratingfile = open(ratingfilename+'.csv', 'r')
+    ratingfile = open(ratingfilename + '.csv', 'r')
     readrating = csv.reader(ratingfile, delimiter =',')
     for row in readrating:
         pics.append(row)
@@ -195,10 +195,10 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     wmfile.close()
     #END INTERACTING W/ PARTICIPANT
         
-def eyetracker(win, expInfo, face_gender):
+def eyetracker(win, expInfo, face_gender, experiment):
     import sys
     from letobii import TobiiController
-    eyedata = 'results/' +  expInfo['Identifier'] + '_' + face_gender + '_' + 'et' + '.tsv'
+    eyedata = 'results/' +  expInfo['Identifier'] + '_' + face_gender + '_' + experiment + 'et' + '.tsv'
     #Eye tracking (Tobii)
     controller = TobiiController(win)
     controller.setDataFile(eyedata)

@@ -8,8 +8,8 @@ import time
 
 #EXPERIMENT VARIABLES
 #Subexperiments:
-eyetracker_do = False
-rate_experiment_do = True
+eyetracker_do = True
+rate_experiment_do = False
 st_experiment_do = True
 
 #Times (in [s]):
@@ -54,7 +54,7 @@ pictures = [{'name': x.decode('ascii')} for x in pictures]
 #EXPERIMENT FILES
 
 if eyetracker_do:
-    controller = eyetracker(win, expInfo, face_gender)
+    controller = eyetracker(win, expInfo, face_gender, 'p')
 else: controller = None
 if rate_experiment_do:
     ratingfilename = rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fixationtime, trialClock, controller)
@@ -62,6 +62,8 @@ else: ratingfilename = None
 message2.draw()
 win.flip()
 if st_experiment_do:
+    if eyetracker_do and rate_experiment_do: # only do this if the rating experiment separates this experiment from the initial calibration
+        controller = eyetracker(win, expInfo, face_gender, 'wm')
     st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock, ratingfilename, controller)
 
 fin_message.draw()
