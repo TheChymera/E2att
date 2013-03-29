@@ -101,7 +101,7 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     process_paddingtime = 3
     
     #Preset input
-    preset_attfile = 'chr_f_p'
+    preset_attfile = 'aa7922847_m_p'
     #END EXPERIMENT VARIABLES
     
     wmfilename = 'results/' + expInfo['Identifier'] + '_' + face_gender + '_' +'wm' + '.csv'
@@ -111,8 +111,8 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     pic_repeat = ceil(wm_trial_repeat * wm_trial_cond / pic_group_N) # calculate necessary repeats
     pics=[]
     if not ratingfilename:
-        ratingfilename = 'results/' + preset_attfile
-    ratingfile = open(ratingfilename + '.csv', 'r')
+        ratingfilename = 'results/' + expInfo['Identifier'] + '_' + face_gender +  '_p.csv'
+    ratingfile = open(ratingfilename, 'r')
     readrating = csv.reader(ratingfile, delimiter =',')
     for row in readrating:
         pics.append(row)
