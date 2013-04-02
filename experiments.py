@@ -3,7 +3,7 @@ from psychopy import visual, data, event, core
 from lefunctions import save_csv
 import csv
 
-def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fixationtime, trialClock, controller=None):
+def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fixationtime, trialClock, controller=None, eyetracker_do=False):
     from random import choice
     
     #EXPERIMENT VARIABLES
@@ -81,9 +81,12 @@ def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fix
         ratingwriter.writerow([face_loop_val['name'], str(rating.getRating()), str(rating.getRT()), ix])
     ratingfile.close()
     #END INTERACTING W/ PARTICIPANT
+    if eyetracker_do:
+        from letobii import TobiiController
+        controller.closeDataFile()
     return ratingfilename
 
-def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock, ratingfilename=None , controller=None):
+def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock, ratingfilename=None , controller=None, eyetracker_do=False):
     from math import ceil
     from numpy.random import permutation
     from lefunctions import means_from_id
@@ -193,6 +196,9 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
         attwm_loop_val['orderl'],attwm_loop_val['namer'],attwm_loop_val['rater'],attwm_loop_val['RTr'],
         attwm_loop_val['orderr'],attwm_loop_val['stiml'],keypress[0][0], keypress[0][1], ix])
     wmfile.close()
+    if eyetracker_do:
+        from letobii import TobiiController
+        controller.closeDataFile()
     #END INTERACTING W/ PARTICIPANT
         
 def eyetracker(win, expInfo, face_gender, experiment):
