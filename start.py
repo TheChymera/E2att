@@ -17,7 +17,7 @@ fixationtime = 2
 end_pause = 5
 
 #Monitor specs:
-mymon = monitors.Monitor('testMonitor', width=51, distance=61)
+mymon = monitors.Monitor('testMonitor', width=51, distance=53)
 resolution = [1920, 1080]
 #END EXPERIMENT VARIABLES
 
@@ -53,16 +53,15 @@ pictures = [{'name': x.decode('ascii')} for x in pictures]
 
 #EXPERIMENT FILES
 
-if eyetracker_do:
-    controller = eyetracker(win, expInfo, face_gender, 'p')
-else: controller = None
 if rate_experiment_do:
+    if eyetracker_do:
+        controller = eyetracker(win, expInfo, face_gender, 'p')
     ratingfilename = rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fixationtime, trialClock, controller, eyetracker_do)
 else: ratingfilename = None
 message2.draw()
 win.flip()
 if st_experiment_do:
-    if eyetracker_do and rate_experiment_do: # only do this if the rating experiment separates this experiment from the initial calibration
+    if eyetracker_do: 
         controller = eyetracker(win, expInfo, face_gender, 'wm')
     st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock, ratingfilename, controller, eyetracker_do)
 
