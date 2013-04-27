@@ -143,10 +143,10 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     message3 = visual.TextStim(win, pos=[0,2],color=[0,0,0],text='Select in each screen the position (left/right, as relative to yourself) where\
         the circle is located. \n\nIndicate your choice by pressing the left or right arrow keys on the keyboard as rapidly as possible.\
         \n\nPress any key to continue',wrapWidth=20.0)
-    image_l = visual.ImageStim(win, name='image',image='sin', mask=None,ori=0, pos=[9,0], size=[15,20],color=[1,1,1], colorSpace=u'rgb',
-        opacity=1,texRes=128, interpolate=True, depth=0.0)
-    image_r = visual.ImageStim(win, name='image',image='sin', mask=None,ori=0, pos=[-9,0], size=[15,20],color=[1,1,1], colorSpace=u'rgb',
-        opacity=1,texRes=128, interpolate=True, depth=0.0)
+    image_l = visual.ImageStim(win, name='image',image='sin', mask=None,ori=0, pos=[7.5,0], size=[15,20],color=[1,1,1], colorSpace=u'rgb',
+        opacity=1,texRes=128, interpolate=True, depth=0.0, flipVert=True)
+    image_r = visual.ImageStim(win, name='image',image='sin', mask=None,ori=0, pos=[-7.5,0], size=[15,20],color=[1,1,1], colorSpace=u'rgb',
+        opacity=1,texRes=128, interpolate=True, depth=0.0, flipVert=True)
     core.wait(process_paddingtime,process_paddingtime)
     
     # new loops
@@ -163,11 +163,11 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
         image_l.setImage(img_path + attwm_loop_val['namel'])
         image_r.setImage(img_path + attwm_loop_val['namer'])
         if attwm_loop_val['stiml'] == 'False':
-            circle.setPos((16,0))
-            square.setPos((-16,0))
+            circle.setPos((14.5,0))
+            square.setPos((-14.5,0))
         else:
-            circle.setPos((-16,0))
-            square.setPos((16,0))
+            circle.setPos((-14.5,0))
+            square.setPos((14.5,0))
         #Fixation
         fixation.draw(win)
         win.flip()
