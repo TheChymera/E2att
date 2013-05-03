@@ -8,8 +8,8 @@ import time
 
 #EXPERIMENT VARIABLES
 #Subexperiments:
-eyetracker_do = False
-rate_experiment_do = False
+eyetracker_do = True
+rate_experiment_do = True
 st_experiment_do = True
 
 #Times (in [s]):
@@ -17,7 +17,7 @@ fixationtime = 2
 end_pause = 5
 
 #Monitor specs:
-mymon = monitors.Monitor('testMonitor', width=51, distance=61)
+mymon = monitors.Monitor('testMonitor', width=51, distance=53)
 resolution = [1920, 1080]
 #END EXPERIMENT VARIABLES
 
@@ -37,7 +37,7 @@ message2 = visual.TextStim(win, pos=[0,2],color=[0,0,0],text='Please wait...',wr
 fin_message = visual.TextStim(win, pos=[0,2],color=[0,0,0],text='Thank you very much for completing the test.\n\nPlease report to your experimenter.'
                            ,wrapWidth=20.0)
  
-#and some handy clocks to keep track of time
+#clocks:
 globalClock = core.Clock()
 trialClock = core.Clock()
 
@@ -53,18 +53,18 @@ pictures = [{'name': x.decode('ascii')} for x in pictures]
 
 #EXPERIMENT FILES
 
-if eyetracker_do:
-    controller = eyetracker(win, expInfo, face_gender, 'p')
-else: controller = None
 if rate_experiment_do:
-    ratingfilename = rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fixationtime, trialClock, controller)
+    if eyetracker_do:
+        controller = eyetracker(win, expInfo, face_gender, 'p')
+    ratingfilename = rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fixationtime, trialClock, controller, eyetracker_do)
 else: ratingfilename = None
-message2.draw()
-win.flip()
 if st_experiment_do:
-    if eyetracker_do and rate_experiment_do: # only do this if the rating experiment separates this experiment from the initial calibration
+    if eyetracker_do: 
         controller = eyetracker(win, expInfo, face_gender, 'wm')
-    st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock, ratingfilename, controller)
+    else: controller = None
+    message2.draw()
+    win.flip()
+    st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock, ratingfilename, controller, eyetracker_do)
 
 fin_message.draw()
 win.flip()

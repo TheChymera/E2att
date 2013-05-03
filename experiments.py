@@ -3,7 +3,7 @@ from psychopy import visual, data, event, core
 from lefunctions import save_csv
 import csv
 
-def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fixationtime, trialClock, controller=None):
+def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fixationtime, trialClock, controller=None, eyetracker_do=False):
     from random import choice
     
     #EXPERIMENT VARIABLES
@@ -81,9 +81,12 @@ def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fix
         ratingwriter.writerow([face_loop_val['name'], str(rating.getRating()), str(rating.getRT()), ix])
     ratingfile.close()
     #END INTERACTING W/ PARTICIPANT
+    if eyetracker_do:
+        from letobii import TobiiController
+        controller.closeDataFile()
     return ratingfilename
 
-def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock, ratingfilename=None , controller=None):
+def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock, ratingfilename=None , controller=None, eyetracker_do=False):
     from math import ceil
     from numpy.random import permutation
     from lefunctions import means_from_id
@@ -101,7 +104,7 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     process_paddingtime = 3
     
     #Preset input
-    preset_attfile = 'chr_f_p'
+    preset_attfile = 'aa7922847_m_p'
     #END EXPERIMENT VARIABLES
     
     wmfilename = 'results/' + expInfo['Identifier'] + '_' + face_gender + '_' +'wm' + '.csv'
@@ -111,8 +114,8 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     pic_repeat = ceil(wm_trial_repeat * wm_trial_cond / pic_group_N) # calculate necessary repeats
     pics=[]
     if not ratingfilename:
-        ratingfilename = 'results/' + preset_attfile
-    ratingfile = open(ratingfilename + '.csv', 'r')
+        ratingfilename = 'results/' + expInfo['Identifier'] + '_' + face_gender +  '_p.csv'
+    ratingfile = open(ratingfilename, 'r')
     readrating = csv.reader(ratingfile, delimiter =',')
     for row in readrating:
         pics.append(row)
@@ -140,10 +143,10 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     message3 = visual.TextStim(win, pos=[0,2],color=[0,0,0],text='Select in each screen the position (left/right, as relative to yourself) where\
         the circle is located. \n\nIndicate your choice by pressing the left or right arrow keys on the keyboard as rapidly as possible.\
         \n\nPress any key to continue',wrapWidth=20.0)
-    image_l = visual.ImageStim(win, name='image',image='sin', mask=None,ori=0, pos=[9,0], size=[15,20],color=[1,1,1], colorSpace=u'rgb',
-        opacity=1,texRes=128, interpolate=True, depth=0.0)
-    image_r = visual.ImageStim(win, name='image',image='sin', mask=None,ori=0, pos=[-9,0], size=[15,20],color=[1,1,1], colorSpace=u'rgb',
-        opacity=1,texRes=128, interpolate=True, depth=0.0)
+    image_l = visual.ImageStim(win, name='image',image='sin', mask=None,ori=0, pos=[7.5,0], size=[15,20],color=[1,1,1], colorSpace=u'rgb',
+        opacity=1,texRes=128, interpolate=True, depth=0.0, flipVert=True)
+    image_r = visual.ImageStim(win, name='image',image='sin', mask=None,ori=0, pos=[-7.5,0], size=[15,20],color=[1,1,1], colorSpace=u'rgb',
+        opacity=1,texRes=128, interpolate=True, depth=0.0, flipVert=True)
     core.wait(process_paddingtime,process_paddingtime)
     
     # new loops
@@ -160,11 +163,11 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
         image_l.setImage(img_path + attwm_loop_val['namel'])
         image_r.setImage(img_path + attwm_loop_val['namer'])
         if attwm_loop_val['stiml'] == 'False':
-            circle.setPos((16,0))
-            square.setPos((-16,0))
+            circle.setPos((14.5,0))
+            square.setPos((-14.5,0))
         else:
-            circle.setPos((-16,0))
-            square.setPos((16,0))
+            circle.setPos((-14.5,0))
+            square.setPos((14.5,0))
         #Fixation
         fixation.draw(win)
         win.flip()
@@ -193,6 +196,9 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
         attwm_loop_val['orderl'],attwm_loop_val['namer'],attwm_loop_val['rater'],attwm_loop_val['RTr'],
         attwm_loop_val['orderr'],attwm_loop_val['stiml'],keypress[0][0], keypress[0][1], ix])
     wmfile.close()
+    if eyetracker_do:
+        from letobii import TobiiController
+        controller.closeDataFile()
     #END INTERACTING W/ PARTICIPANT
         
 def eyetracker(win, expInfo, face_gender, experiment):
