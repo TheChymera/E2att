@@ -41,3 +41,6 @@ image*.png
 
 #Folders with non-free data:
 pics/
+
+#git
+*.py.*
