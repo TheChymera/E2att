@@ -8,7 +8,7 @@ import time
 
 #EXPERIMENT VARIABLES
 #Subexperiments:
-eyetracker_do = True
+eyetracker_do = False
 rate_experiment_do = False
 st_experiment_do = True
 
