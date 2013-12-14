@@ -12,7 +12,7 @@ from matplotlib.font_manager import FontProperties
 from pylab import figure, show, errorbar, setp, legend
 from matplotlib import axis
 
-globalpath = '~/Data/shared/2att/' #root of results
+globalpath = '~/data/2att/' #root of results
 bh_results = 'bh/' # behavioural test results
 cq_results = 'cq/' # questionnaire results
 

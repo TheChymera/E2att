@@ -86,7 +86,7 @@ def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fix
         controller.closeDataFile()
     return ratingfilename
 
-def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock, ratingfilename=None , controller=None, eyetracker_do=False):
+def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock, ratingfilename=None, controller=None, eyetracker_do=False):
     from math import ceil
     from numpy.random import permutation
     from lefunctions import means_from_id
@@ -117,6 +117,7 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
         ratingfilename = 'results/' + expInfo['Identifier'] + '_' + face_gender +  '_p.csv'
     ratingfile = open(ratingfilename, 'r')
     readrating = csv.reader(ratingfile, delimiter =',')
+    print readrating
     for row in readrating:
         pics.append(row)
     ratingfile.close()
