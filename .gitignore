@@ -15,9 +15,7 @@
 .DS_Store
 .DS_Store?
 ._*
-.Spotlight-V100
 .Trashes
-Icon?
 ehthumbs.db
 Thumbs.db
 
@@ -26,21 +24,28 @@ Thumbs.db
 *.pyo
 
 # Data traces:
+results/*
+*/results/
+image*
 *.csv
 *.tsv
-results/*
-image-*.pdf
-image.pdf
-image.pmg
-image*.png
 
-#eclipse 
-.project
-.pydevproject
-.settings/*
+#geany
+geany_run_script.sh
 
 #Folders with non-free data:
-pics/
+img*/
+pics*/
+experiment/pics*/
+experiment/img*/
+
+#Archive folders:
+*/*/.old
+*/.old
+.old
+
+#config files:
+*.cfg
 
 #git
 *.py.*
