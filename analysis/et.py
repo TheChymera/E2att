@@ -14,7 +14,7 @@ from matplotlib import axis
 from chr_helpers import get_config_file
 
 # this function does a "total", time resolved analysis of gaze coordinates along one axis 
-def ett(plot_axis="x", source=False, id_list="final", make_tight=True, print_title = True, linewidth=0.8, fontscale=0.5, isspec = False):
+def ett(plot_ax="Y", source=False, id_list="final", make_tight=True, print_title=True, linewidth=0.8, fontscale=0.5, isspec=False, make_sem=True):
     config = get_config_file(localpath=path.dirname(path.realpath(__file__))+'/')
 	    
     #IMPORT VARIABLES
@@ -24,10 +24,12 @@ def ett(plot_axis="x", source=False, id_list="final", make_tight=True, print_tit
     reaction_times = config.get('Addresses', 'reaction_times')
     #END IMPORT VARIABLES
     
-    if plot_axis == "x":
+    if plot_ax == "X":
 	plot_axis = 'GazePointX'
-    if plot_axis == "y":
+	direction = "(towards stimulus)"
+    if plot_ax == "Y":
 	plot_axis = 'GazePointY'
+	direction = "(up)"
     data_path = path.expanduser(data_path)
     rt_path = data_path + reaction_times
     
@@ -126,10 +128,11 @@ def ett(plot_axis="x", source=False, id_list="final", make_tight=True, print_tit
     
 	eye_data = pd.concat([eye_data_aa, eye_data_uu, eye_data_uas, eye_data_aus])
 	eye_data['ID'] = fileid
+	eye_data["timepoint"] = eye_data.index
 	if fileidx == 0:
-	    eye_data_total = eye_data[['time','GazePointX','GazePointY','stimuli']]
+	    eye_data_total = eye_data[["timepoint",'time','GazePointX','GazePointY','stimuli',"ID"]]
 	else:
-	    eye_data_total[['time','GazePointX','GazePointY']] = eye_data_total[['time','GazePointX','GazePointY']] + eye_data[['time','GazePointX','GazePointY']]
+	    eye_data_total =  pd.concat([eye_data_total, eye_data[["timepoint",'time','GazePointX','GazePointY','stimuli',"ID"]]])
     
     # load reaction times (to plot as lines) here:
     conts = get_dataframes(id_list, rt_path)
@@ -138,32 +141,54 @@ def ett(plot_axis="x", source=False, id_list="final", make_tight=True, print_tit
     aa_reaction_time = conts[(conts['block'] == 'aa')]['RT'].mean()*1000
     uu_reaction_time = conts[(conts['block'] == 'uu')]['RT'].mean()*1000
     # end load reaction times
-    
-    eye_data_total[['time','GazePointX','GazePointY']] = eye_data_total[['time','GazePointX','GazePointY']] / len(id_list)
-    
+
+    et_means = eye_data_total.groupby(["stimuli","timepoint"]).mean()
+    if make_sem:
+	et_sem = eye_data_total.groupby(["stimuli","timepoint"]).aggregate(sem)
+     
     fig = figure(figsize=(3, 4), dpi=300, facecolor='#eeeeee', tight_layout=make_tight)
     ax1=fig.add_subplot(2,1,1)
     matplotlib.rcParams.update({'font.size': 12*fontscale})
     
-    ax1.set_xlim(0, eye_data_total['time'].max())
-    ax1.plot(eye_data_total[(eye_data_total['stimuli'] == 'aa')]['time'],eye_data_total[(eye_data_total['stimuli'] == 'aa')][plot_axis], color='g')
-    ax1.plot(eye_data_total[(eye_data_total['stimuli'] == 'uu')]['time'],eye_data_total[(eye_data_total['stimuli'] == 'uu')][plot_axis], color='m')
-    legend(('Attractive - Attractive','Unattractive - Unattractive'), bbox_to_anchor=(0.93, 1), shadow=False, frameon=False, prop=FontProperties(size=str(9*fontscale)))
+    ax1.set_xlim(0, et_means['time'].max())
+    tc = et_means.ix["aa"]['time']
+    v = et_means.ix["aa"][plot_axis]
+    ax1.plot(tc, v, color='g')
+    if make_sem:
+	se = et_sem.ix["aa"][plot_axis]/2
+	ax1.fill_between(tc, v+se, v-se, facecolor="g", edgecolor="none", alpha=0.1, zorder=0)
+    tc = et_means.ix["uu"]['time']
+    v = et_means.ix["uu"][plot_axis]
+    ax1.plot(tc, v, color='m')
+    if make_sem:
+	se = et_sem.ix["uu"][plot_axis]/2
+	ax1.fill_between(tc, v+se, v-se, facecolor="m", edgecolor="none", alpha=0.1, zorder=0)
+    legend(('Attractive - Attractive','Unattractive - Unattractive'), bbox_to_anchor=(0.94, 0.99), shadow=False, frameon=False, prop=FontProperties(size=str(9*fontscale)))
     ax1.axhline(0, color='k', alpha = 0.1, linewidth=linewidth)
     ax1.axvline(aa_reaction_time, color='g', alpha = 0.3, linewidth=linewidth)
     ax1.axvline(uu_reaction_time, color='m', alpha = 0.3, linewidth=linewidth)
-    ax1.set_ylabel('X-axis % (towards stimulus)')
+    ax1.set_ylabel(plot_ax+'-axis % '+direction)
     ax1.set_xlabel('Time [ms]')
     
     ax2 = fig.add_subplot(212)
-    ax2.set_xlim(0, eye_data_total['time'].max())
-    ax2.plot(eye_data_total[(eye_data_total['stimuli'] == 'uas')]['time'],eye_data_total[(eye_data_total['stimuli'] == 'uas')][plot_axis], color='g')
-    ax2.plot(eye_data_total[(eye_data_total['stimuli'] == 'aus')]['time'],eye_data_total[(eye_data_total['stimuli'] == 'aus')][plot_axis], color='m')
-    legend(('Attractive on Stimulus Side','Unattractive on Stimulus Side'), bbox_to_anchor=(0.93, 1), shadow=False, frameon=False, prop=FontProperties(size=str(9*fontscale)))
+    ax2.set_xlim(0, et_means['time'].max())
+    tc = et_means.ix["uas"]['time']
+    v = et_means.ix["uas"][plot_axis]
+    ax2.plot(tc, v, color='g')
+    if make_sem:
+	se = et_sem.ix["uas"][plot_axis]/2
+	ax2.fill_between(tc, v+se, v-se, facecolor="g", edgecolor="none", alpha=0.1, zorder=0)
+    tc = et_means.ix["aus"]['time']
+    v = et_means.ix["aus"][plot_axis]
+    ax2.plot(tc, v, color='m')
+    if make_sem:
+	se = et_means.ix["aus"][plot_axis]/2
+	ax2.fill_between(tc, v+se, v-se, facecolor="m", edgecolor="none", alpha=0.1, zorder=0)
+    legend(('Attractive on Target Side','Unattractive on Target Side'), bbox_to_anchor=(0.94, 0.99), shadow=False, frameon=False, prop=FontProperties(size=str(9*fontscale)))
     ax2.axhline(0, color='k', alpha = 0.1, linewidth=linewidth)
     ax2.axvline(sa_reaction_time, color='g', alpha = 0.3, linewidth=linewidth)
     ax2.axvline(su_reaction_time, color='m', alpha = 0.3, linewidth=linewidth)
-    ax2.set_ylabel('X-axis % (towards stimulus)')
+    ax2.set_ylabel(plot_ax+'-axis % '+direction)
     ax2.set_xlabel('Time [ms]')
 
 if __name__ == '__main__':
