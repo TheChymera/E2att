@@ -31,19 +31,19 @@ id_list = l_dist
 isspec = True
 
 conts = get_dataframes(id_list, bhpath)
-if isspec: 
+if isspec:
 	spec_conts = get_dataframes(spec, bhpath)
 	meanscont = spec_conts.groupby('subblock').mean()
-	print meanscont
+	print(meanscont)
 	cat1 = spec_conts[spec_conts['subblock']=='aus+sua']
 	cat2 = spec_conts[spec_conts['subblock']=='uas+sau']
-	print ttest_ind(cat1['RTdiff'], cat2['RTdiff'])
+	print(ttest_ind(cat1['RTdiff'], cat2['RTdiff']))
 
 meanscont = conts.groupby('subblock').mean()
-print meanscont
+print(meanscont)
 cat1 = conts[conts['subblock']=='aus+sua']
 cat2 = conts[conts['subblock']=='uas+sau']
-print ttest_ind(cat1['RTdiff'], cat2['RTdiff'])
+print(ttest_ind(cat1['RTdiff'], cat2['RTdiff']))
 
 ids = sorted(list(set(conts.set_index('ID').index)))
 pos_ids = np.arange(len(ids))
@@ -77,7 +77,7 @@ su_t_std = sem(conts[(conts['subblock'] == 'aus+sua')]['RTdiff'])
 if isspec:
 	sa_spec_means = spec_conts[(spec_conts['subblock'] == 'uas+sau')]['RTdiff'].mean()
 	sa_spec_std = sem(spec_conts[(spec_conts['subblock'] == 'uas+sau')]['RTdiff'])
-	
+
 	su_spec_means = spec_conts[(spec_conts['subblock'] == 'aus+sua')]['RTdiff'].mean()
 	su_spec_std = sem(spec_conts[(spec_conts['subblock'] == 'aus+sua')]['RTdiff'])
 

@@ -21,7 +21,7 @@ ids = np.unique(ids)
 conts = pd.DataFrame([])
 
 for i in ids:
-	print i
+	print(i)
 	cont = open_csv(bhpath+i+'_p')
 	cont = pd.DataFrame(cont[1:], columns=cont[0])
 	cont['score'] = cont['score'].astype(np.float64)
@@ -39,12 +39,12 @@ for i in ids:
 	lemeans = pd.DataFrame([])
 	lemeans['picture'] = ''
 	for n in set(cont.set_index('session').index):
-		print cont[(cont['session'] == n)]['picture']
-		print cont[(cont['picture'] == cont[(cont['session'] == n)]['picture'])]
+		print(cont[(cont['session'] == n)]['picture'])
+		print(cont[(cont['picture'] == cont[(cont['session'] == n)]['picture'])])
 		cont.ix[(cont['session'] == n), 'score'] = cont[(cont['session'] == n)]['score']/cont[(cont['picture'] == cont[(cont['session'] == n)]['picture'])].mean()
 		#print cont[(cont['session'] == n)]
 		#means = pd.DataFrame([])
 		#means['picture'] = n
 		#print means
 		#cont[cont['picture'] == n] = (cont[cont['picture'] == n] - cont[cont['picture'] == n].mean()) / cont[cont['picture'] == n].std()
-	print cont
+	print(cont)

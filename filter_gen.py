@@ -14,9 +14,9 @@ def mk_newfilter(filtername, field_names, filterdir, globaldata):
     if path.isfile(lefilter):
         if path.isdir(globaldata+filterdir+'.backup'):
             pass
-        else: makedirs(globaldata+filterdir+'.backup')        
+        else: makedirs(globaldata+filterdir+'.backup')
         move(lefilter, globaldata+filterdir+'.backup/'+time+filtername+'.csv')
-        print 'moved '+ lefilter +' pre-existing filter to backup location'
+        print('moved '+lefilter+' pre-existing filter to backup location')
     else: pass
     filterfile = open(lefilter, 'w')
     filterwriter = csv.writer(filterfile, delimiter=',')

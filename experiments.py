@@ -5,19 +5,19 @@ import csv
 
 def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fixationtime, trialClock, controller=None, eyetracker_do=False):
     from random import choice
-    
+
     #EXPERIMENT VARIABLES
     #Times (in [s]):
     rate_time = 2
     #END EXPERIMENT VARIABLES
-        
-    ratingfilename = 'results/' +  expInfo['Identifier'] + '_' + face_gender + '_' + 'p' + '.csv' 
+
+    ratingfilename = 'results/' +  expInfo['Identifier'] + '_' + face_gender + '_' + 'p' + '.csv'
     ratingwriter, ratingfile = save_csv(ratingfilename, ['picture','score','RT','session'])
-    
+
     #loops:
     face_loop = data.TrialHandler(pictures, 3)
     face_loop_val = face_loop.trialList[0]  # so we can initialise stimuli with some values
-    
+
     #stimuli:
     message1 = visual.TextStim(win, pos=[0,2],color=[0,0,0],text='Rate the following faces according to how attracted you feel towards them.\
         \n\nIn between presentations concentrate on the fixation dot (in the middle of the screen).\n\nPress any key to continue',wrapWidth=20.0)
@@ -26,7 +26,7 @@ def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fix
     rating = visual.RatingScale(win=win, name='rating', displaySizeFactor=1.00, escapeKeys=['escape'],textSizeFactor=0.8, lineColor='DarkGrey',
         pos=[0.0, -0.1], low=0, high=1, showScale=False, lowAnchorText='not at all attracted', highAnchorText='very attracted',stretchHoriz=1.2,
         precision=100, showValue=False, markerExpansion=0, singleClick=False,markerStyle='glow', markerColor='#444444')
-    
+
     #INTERACTING W/ PARTICIPANT
     message1.draw()
     win.flip()#to show our newly drawn 'stimuli'
@@ -53,7 +53,7 @@ def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fix
         win.flip()
         continueRoutine = rating.noResponse
     win.setMouseVisible(False)
-    
+
     #RATING TRIALS
     for ix, face_loop_val in enumerate(face_loop):
         image.setImage(img_path + face_loop_val['name'])
@@ -86,30 +86,30 @@ def rate_experiment(win, expInfo, face_gender, img_path, pictures, fixation, fix
         controller.closeDataFile()
     return ratingfilename
 
-def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock, ratingfilename=None , controller=None, eyetracker_do=False):
+def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, trialClock, ratingfilename=None, controller=None, eyetracker_do=False):
     from math import ceil
     from numpy.random import permutation
     from lefunctions import means_from_id
     import numpy as np
-    
-    
+
+
     #EXPERIMENT VARIABLES
     #Session repeats et al.
     wm_trial_repeat=30 #even number, to maintain 1:1 left/rigt cue pressentation ratio
     wm_trial_cond=4 # number of conditions - see how many cond_* variables you have below
     pic_group_N=20 #how many pictures in each group (attractive//unattractive)
-    
+
     #Times (in [s]):
     att_time = 1.5
     process_paddingtime = 3
-    
+
     #Preset input
     preset_attfile = 'aa7922847_m_p'
     #END EXPERIMENT VARIABLES
-    
+
     wmfilename = 'results/' + expInfo['Identifier'] + '_' + face_gender + '_' +'wm' + '.csv'
     wmwriter,wmfile = save_csv(wmfilename, ['nameL','rateL','RTL','orderL','nameR','rateR','RTR','orderR','isstimleft','keypress','RT','session'])
-    
+
     #CREATE STIMULUS INDEX
     pic_repeat = ceil(wm_trial_repeat * wm_trial_cond / pic_group_N) # calculate necessary repeats
     pics=[]
@@ -117,6 +117,7 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
         ratingfilename = 'results/' + expInfo['Identifier'] + '_' + face_gender +  '_p.csv'
     ratingfile = open(ratingfilename, 'r')
     readrating = csv.reader(ratingfile, delimiter =',')
+    print(readrating)
     for row in readrating:
         pics.append(row)
     ratingfile.close()
@@ -136,7 +137,7 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     cond_4= np.concatenate((top_pics_stack[wm_trial_repeat*2:wm_trial_repeat*3], top_pics_stack[wm_trial_repeat*3:wm_trial_repeat*4], lcue), axis=1) #att vs att
     stimuli = np.concatenate((cond_1, cond_2, cond_3, cond_4), axis=0)
     #END CREATE STIMULUS INDEX
-    
+
     #stimuli:
     circle = visual.Circle(win, radius=0.32, edges=100, lineColor=(0 , 0, 0), fillColor=(0 , 0, 0), interpolate=True)# radii chosen so that the area of the square and circle are identical
     square = visual.Circle(win, radius=0.4, edges=4, lineColor=(0 , 0, 0), fillColor=(0 , 0, 0)) #idem
@@ -148,17 +149,17 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     image_r = visual.ImageStim(win, name='image',image='sin', mask=None,ori=0, pos=[-7.5,0], size=[15,20],color=[1,1,1], colorSpace=u'rgb',
         opacity=1,texRes=128, interpolate=True, depth=0.0, flipVert=True)
     core.wait(process_paddingtime,process_paddingtime)
-    
+
     # new loops
     tb_pictures = [{'namel':x[0],'ratel':x[1],'RTl':x[2],'orderl':x[3],'namer':x[4],'rater':x[5],
     'RTr':x[6],'orderr':x[7],'stiml': x[8]} for x in stimuli]
     attwm_loop = data.TrialHandler(tb_pictures, 1)
-    
+
     #INTERACTING W/ PARTICIPANT
     message3.draw()
     win.flip()
     event.waitKeys()#pause until there's a keypress
-    
+
     for ix, attwm_loop_val in enumerate(attwm_loop):
         image_l.setImage(img_path + attwm_loop_val['namel'])
         image_r.setImage(img_path + attwm_loop_val['namer'])
@@ -200,7 +201,7 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
         from letobii import TobiiController
         controller.closeDataFile()
     #END INTERACTING W/ PARTICIPANT
-        
+
 def eyetracker(win, expInfo, face_gender, experiment):
     import sys
     from letobii import TobiiController

@@ -8,8 +8,8 @@ import time
 
 #EXPERIMENT VARIABLES
 #Subexperiments:
-eyetracker_do = True
-rate_experiment_do = True
+eyetracker_do = False
+rate_experiment_do = False
 st_experiment_do = True
 
 #Times (in [s]):
@@ -28,7 +28,7 @@ if dlg.OK == False: core.quit()  # user pressed cancel
 #END INTERACTING W/ PARTICIPANT
 
 #windows:
-win = visual.Window(resolution, color=[1,1,1],fullscr=True,allowGUI=False,monitor=mymon, screen=1, units="deg")
+win = visual.Window(resolution, color=[1,1,1],fullscr=True,allowGUI=False,monitor=mymon, screen=0, units="deg")
 win.setRecordFrameIntervals(False)
 
 #stimuli:

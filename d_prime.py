@@ -77,7 +77,7 @@ if isspec:
 	s_aa_bars = plt.bar(pos_ids[-1]+2+width/3, s_dp_aa, width/3 ,color='#488C0F', alpha=0.4, zorder = 1)
 	s_uu_bars = plt.bar(pos_ids[-1]+2+width*2/3, s_dp_uu, width/3 ,color='#0F8C2F', alpha=0.4, zorder = 1)
 
-print f_oneway(all_au_dp,all_aa_dp,all_uu_dp)
+print(f_oneway(all_au_dp,all_aa_dp,all_uu_dp))
 
 if isspec:
 	ids=ids+['total',spec]
