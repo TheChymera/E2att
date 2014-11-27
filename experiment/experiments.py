@@ -137,7 +137,7 @@ def st_experiment(win, expInfo, face_gender, img_path, fixation, fixationtime, t
     cond_4= np.concatenate((top_pics_stack[wm_trial_repeat*2:wm_trial_repeat*3], top_pics_stack[wm_trial_repeat*3:wm_trial_repeat*4], lcue), axis=1) #att vs att
     stimuli = np.concatenate((cond_1, cond_2, cond_3, cond_4), axis=0)
     #END CREATE STIMULUS INDEX
-
+    
     #stimuli:
     circle = visual.Circle(win, radius=0.32, edges=100, lineColor=(0 , 0, 0), fillColor=(0 , 0, 0), interpolate=True)# radii chosen so that the area of the square and circle are identical
     square = visual.Circle(win, radius=0.4, edges=4, lineColor=(0 , 0, 0), fillColor=(0 , 0, 0)) #idem
